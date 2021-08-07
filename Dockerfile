@@ -1,8 +1,10 @@
-FROM python:3.9-slim
+FROM tensorflow/tensorflow:latest-gpu
 
 WORKDIR /code
 
-RUN pip install -U discord.py python-dotenv
+COPY checkpoint /checkpoint
+
+RUN pip install -U discord.py python-dotenv gpt-2-simple
 
 COPY .env .
 
