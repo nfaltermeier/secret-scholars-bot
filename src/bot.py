@@ -1,17 +1,16 @@
 import discord
 import os
 from dotenv import load_dotenv
-import gpt_2_simple as gpt2
 import logging
 from datetime import datetime, timezone
+import gptlib
 
 # setup logging
 
 logging.basicConfig(level=logging.INFO)
 
 # setup gpt2
-sess = gpt2.start_tf_sess()
-gpt2.load_gpt2(sess, run_name='secret_scholars')
+gptlib.start_sess('secret_scholars')
 
 total_generated = 0
 
@@ -36,19 +35,7 @@ async def on_message(message):
             prefix = message.content[5:]
             logging.info(f'{datetime.now(timezone.utc)} Generating message with prefix "{prefix}". Previously generated count: {total_generated}')
             total_generated += 1
-            text = gpt2.generate(sess, 
-                run_name='secret_scholars',
-                top_k=20,
-                nsamples=1,
-                batch_size=1,
-                temperature=1.4,
-                length = 150,
-                prefix = prefix,
-                return_as_list=True
-                        )[0]
-            # Replace code marks with a version with invisible spaces
-            text = text.replace('```', '`​`​`')
-            await message.channel.send(f'```{text}```')
+            await gptlib.generate(prefix, message.channel.send)
         else:
             await message.channel.send('Please use the right channel :slight_smile:')
         
