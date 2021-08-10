@@ -53,5 +53,4 @@ async def generate(run_name, prefix, callback):
             logging.info(f'{datetime.now(timezone.utc)} 2 sessions generated, restarting tf session')
             start_sess(current_run_name)
 
-        logging.info(f'{datetime.now(timezone.utc)} Uncollectable garbage count: {len(gc.garbage)}')
         gc.collect()
