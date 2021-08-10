@@ -9,9 +9,7 @@ COPY checkpoint /code/checkpoint
 
 RUN pip3 --no-cache-dir install -U tensorflow==1.15.2 gpt-2-simple discord.py python-dotenv
 
-COPY .env .
-
-COPY src/ .
+COPY .env src/ secret-scholars-bot-config.json ./
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
