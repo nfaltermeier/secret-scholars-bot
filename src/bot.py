@@ -5,6 +5,7 @@ import logging
 from datetime import datetime, timezone
 import gptlib
 import config
+import asyncio
 
 logging.basicConfig(level=logging.INFO)
 
@@ -29,7 +30,11 @@ async def on_message(message):
         return
 
     if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
+        bot_response = await message.channel.send('Hello!')
+        await asyncio.sleep(300)
+        logging.info(f'{datetime.now(timezone.utc)} Attempting to delete hello messages')
+        await message.delete()
+        await bot_response.delete()
     else:
         for cmd in conf['checkpoints'].keys():
             if message.content.startswith(f'${cmd}'):
@@ -40,7 +45,11 @@ async def on_message(message):
                     total_generated += 1
                     await gptlib.generate(run_name, prefix, message.channel.send)
                 else:
-                    await message.channel.send('Please use the right channel :slight_smile:')
+                    bot_response = await message.channel.send('Please use the right channel :slight_smile:')
+                    await asyncio.sleep(300)
+                    logging.info(f'{datetime.now(timezone.utc)} Attempting to delete messages in incorrect channel')
+                    await message.delete()
+                    await bot_response.delete()
         
 
 load_dotenv()
