@@ -23,7 +23,7 @@ def read_or_create_config():
     else:
         with open(filename, 'w') as f:
             conf = {
-                'checkpoints': [],
+                'checkpoints': {},
                 'allowed-channels': [],
             }
             json.dump(conf, f)
