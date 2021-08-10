@@ -1,3 +1,6 @@
+## Continue branch
+Allows continuing a message, but the seed parameter does nothing so the bot produces the same message every time when given the same prompt.
+
 ## Build
 Create `.env` file with the contents:
 ```
