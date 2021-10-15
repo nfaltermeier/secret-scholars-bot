@@ -27,10 +27,15 @@ def read_or_create_config():
         conf['strict-donuts'] = false
       elif not type(conf['strict-donuts']) is bool:
         raise Exception('config file key \'strict-donuts\' should be an bool to delete messages from donut users that block the bot')
+      if not 'gpt-enabled' in conf:
+        conf['gpt-enabled'] = false
+      elif not type(conf['gpt-enabled']) is bool:
+        raise Exception('config file key \'gpt-enabled\' should be an bool for whether or not to enable gpt message generation')
       return conf
   else:
     with open(filename, 'w') as f:
       conf = {
+        'gpt-enabled': True,
         'checkpoints': {},
         'allowed-channels': [],
         'donut-ids': [],

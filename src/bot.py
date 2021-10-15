@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 import logging
 from datetime import datetime, timezone
-import gptlib
+# import gptlib
 import donut
 import config
 import asyncio
@@ -23,6 +23,13 @@ def allowed_channel(channel):
 async def on_ready():
   logging.info(f'{datetime.now(timezone.utc)} We have logged in as {client.user}')
 
+# API says this is called for thread creation and joining a thread...
+@client.event
+async def on_thread_join(thread):
+  global joined_threads
+  logging.info(f'{datetime.now(timezone.utc)} Joined thread {thread.name}')
+  await thread.join()
+
 @client.event
 async def on_message(message):
   global total_generated
@@ -39,20 +46,22 @@ async def on_message(message):
     await message.delete()
     await bot_response.delete()
   else:
-    for cmd in conf['checkpoints'].keys():
-      if message.content.startswith(f'${cmd}'):
-        if allowed_channel(message.channel.name):
-          run_name = conf['checkpoints'][cmd]
-          prefix = message.content[len(cmd) + 2:]
-          logging.info(f'{datetime.now(timezone.utc)} Generating message with prefix "{prefix}" for model "{run_name}". Previously generated count: {total_generated}')
-          total_generated += 1
-          await gptlib.generate(run_name, prefix, message.channel.send)
-        else:
-          bot_response = await message.channel.send('Please use the right channel :slight_smile:')
-          await asyncio.sleep(300)
-          logging.info(f'{datetime.now(timezone.utc)} Attempting to delete messages in incorrect channel')
-          await message.delete()
-          await bot_response.delete()
+    return
+    if conf['gpt-enabled']:
+      for cmd in conf['checkpoints'].keys():
+        if message.content.startswith(f'${cmd}'):
+          if allowed_channel(message.channel.name):
+            run_name = conf['checkpoints'][cmd]
+            prefix = message.content[len(cmd) + 2:]
+            logging.info(f'{datetime.now(timezone.utc)} Generating message with prefix "{prefix}" for model "{run_name}". Previously generated count: {total_generated}')
+            total_generated += 1
+            await gptlib.generate(run_name, prefix, message.channel.send)
+          else:
+            bot_response = await message.channel.send('Please use the right channel :slight_smile:')
+            await asyncio.sleep(300)
+            logging.info(f'{datetime.now(timezone.utc)} Attempting to delete messages in incorrect channel')
+            await message.delete()
+            await bot_response.delete()
     
 
 load_dotenv()
