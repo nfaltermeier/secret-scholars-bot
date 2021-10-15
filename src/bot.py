@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import logging
 from datetime import datetime, timezone
 import gptlib
+import donut
 import config
 import asyncio
 
@@ -28,6 +29,8 @@ async def on_message(message):
 
   if message.author == client.user:
     return
+
+  await donut.on_message(message, conf)
 
   if message.content.startswith('$hello'):
     bot_response = await message.channel.send('Hello!')
