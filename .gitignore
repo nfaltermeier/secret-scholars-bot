@@ -4,6 +4,7 @@ checkpoint
 disabled_checkpoint
 secret-scholars-bot-config.json
 src/config.py
+secret-scholars-bot-arm32v6.tar.gz
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,python
@@ -175,3 +176,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,python
+
+!/src/lib/

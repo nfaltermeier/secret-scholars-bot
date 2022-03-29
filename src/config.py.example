@@ -1,2 +1,16 @@
+homeserver_id = 12345 # Discord server ID for the bot's main server that most features are locked to
+
 donut_ids = [12345] # discord user IDs to donut
 strict_donuts = False
+
+random_reaction_emoji = ["😼"] # emoji characters to randomly react to messages with
+random_reaction_custom_emote_ids = [12345] # discord ids of custom emotes to randomly react to messages with
+random_reaction_base_chance = 2.5 # 2.5 is 2.5% chance to react to a message
+random_reaction_chance_increment = 0.25
+
+minecraft_status_report_enabled = False
+minecraft_status_report_ip = "1.1.1.1"
+minecraft_status_report_port = 25565
+minecraft_status_report_channels = [12345] # Discord channel IDs to report the status of the minecraft server to
+
+soup_channels = ["soup"] # The names of channels that the soup command can be used in
