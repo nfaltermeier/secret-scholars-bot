@@ -18,9 +18,9 @@ def load_excuses(config):
 
 def roll():
   r = random.uniform(0, w)
-  for e in w_excuses:
+  for e in excuses:
     if (e >= r):
-      return w_excuses[e]
+      return excuses[e]
 
 trigger = re.compile(r"(^|\s)\$excuse($|\s)", re.MULTILINE)
 async def on_message(message):

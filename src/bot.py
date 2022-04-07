@@ -23,6 +23,7 @@ async def on_ready():
   logging.info(f'{datetime.now(timezone.utc)} Logged in as {client.user}')
   donut.add_emoji(client, config)
   minecraft.start(client, config)
+  excuse.load_excuses(config)
 
 # API says this is called for thread creation and joining a thread...
 @client.event
@@ -44,7 +45,7 @@ async def on_message(message):
 
     await donut.on_message(message, config, client)
     await soup.on_message(message, client, config)
-    await excuse.on_message(message, config)
+    await excuse.on_message(message)
     if await roll.on_message(message):
       return
 
