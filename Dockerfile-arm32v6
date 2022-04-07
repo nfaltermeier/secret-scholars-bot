@@ -1,11 +1,11 @@
 # Based off of https://github.com/minimaxir/gpt-2-cloud-run/blob/master/Dockerfile
 FROM arm32v6/python:3.8-alpine
 
-RUN apk update && apk add git gcc musl-dev
+RUN apk update && apk add gcc musl-dev
 
 WORKDIR /code
 
-RUN pip3 --no-cache-dir install -U git+https://github.com/Rapptz/discord.py python-dotenv
+RUN pip3 --no-cache-dir install -U py-cord==2.0.0b5 python-dotenv
 
 COPY .env src/ secret-scholars-bot-config.json ./
 

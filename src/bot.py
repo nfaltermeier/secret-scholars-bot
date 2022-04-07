@@ -9,6 +9,7 @@ import roll
 import config
 import asyncio
 import minecraft
+import excuse
 
 logging.basicConfig(level=logging.INFO)
 
@@ -19,7 +20,7 @@ client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
-  logging.info(f'{datetime.now(timezone.utc)} We have logged in as {client.user}')
+  logging.info(f'{datetime.now(timezone.utc)} Logged in as {client.user}')
   donut.add_emoji(client, config)
   minecraft.start(client, config)
 
@@ -45,6 +46,7 @@ async def on_message(message):
 
     await donut.on_message(message, config, client)
     await soup.on_message(message, client, config)
+    await excuse.on_message(message, config)
     if await roll.on_message(message):
       return
 

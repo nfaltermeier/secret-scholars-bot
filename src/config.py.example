@@ -14,3 +14,9 @@ minecraft_status_report_port = 25565
 minecraft_status_report_channels = [12345] # Discord channel IDs to report the status of the minecraft server to
 
 soup_channels = ["soup"] # The names of channels that the soup command can be used in
+
+excuses = [
+  "at work",
+  ("grocery shopping", 2)
+] # An array of string messages or tuples containing a string message and a weight. Non-tuples have a weight on 1.
+# Weights can be a decimal, 0 < w < infinity
