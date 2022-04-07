@@ -8,15 +8,8 @@ Designed to be ran in a Docker container. I would recomend removing the `.env` f
 ```
 DISCORD_TOKEN=<discord bot token>
 ```
-`secret-scholars-bot-config.json`
-```
-{
-  "donut-ids": [
-    <integer discord id 1>
-  ],
-  "strict-donuts": false
-}
-```
+
+Copy `src/config.py.example` to `src/config.py` and customize as desired.
 
 ## Build
 

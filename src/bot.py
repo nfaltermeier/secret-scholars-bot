@@ -9,8 +9,6 @@ import asyncio
 
 logging.basicConfig(level=logging.INFO)
 
-conf = config.read_or_create_config()
-
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -32,7 +30,7 @@ async def on_message(message):
   if message.author == client.user:
     return
 
-  await donut.on_message(message, conf)
+  await donut.on_message(message, config)
 
   if message.content.startswith('$hello'):
     bot_response = await message.channel.send('Hello!')

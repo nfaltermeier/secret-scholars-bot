@@ -1,0 +1,2 @@
+donut_ids = [12345] # discord user IDs to donut
+strict_donuts = False
