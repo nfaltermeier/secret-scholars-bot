@@ -49,6 +49,4 @@ async def on_message(message, conf, client):
       except discord.HTTPException as result:
         if result.status == 403 and conf.strict_donuts:
           await message.delete()
-          bot_response = await message.channel.send("Donut be naughty...")
-          await asyncio.sleep(10)
-          await bot_response.delete()
+          bot_response = await message.channel.send("Donut be naughty...", delete_after=10)

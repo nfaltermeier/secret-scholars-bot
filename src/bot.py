@@ -31,8 +31,6 @@ async def on_thread_join(thread):
   logging.info(f'{datetime.now(timezone.utc)} Joined thread {thread.name}')
   await thread.join()
 
-  # https://discordpy.readthedocs.io/en/stable/api.html?highlight=react#discord.RawReactionActionEvent
-
 @client.event
 async def on_message(message):
   try:
@@ -58,6 +56,5 @@ async def on_message(message):
     logging.exception(f'{datetime.now(timezone.utc)} main on_message failed')
     await message.channel.send("Something went wrong :(")
     
-
 load_dotenv()
 client.run(os.getenv('DISCORD_TOKEN'))
