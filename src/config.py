@@ -11,14 +11,6 @@ def read_or_create_config():
     with open(filename, 'r') as f:
       conf = json.load(f)
 
-      if not 'checkpoints' in conf:
-        conf['checkpoints'] = {}
-      elif not type(conf['checkpoints']) is dict:
-        raise Exception('config file key \'checkpoints\' should be an object command name keys and checkpoint names as values')
-      if not 'allowed-channels' in conf:
-        conf['allowed-channels'] = []
-      elif not type(conf['allowed-channels']) is list:
-        raise Exception('config file key \'allowed-channels\' should be an array with channel name values')
       if not 'donut-ids' in conf:
         conf['donut-ids'] = []
       elif not type(conf['donut-ids']) is list:
@@ -27,17 +19,10 @@ def read_or_create_config():
         conf['strict-donuts'] = false
       elif not type(conf['strict-donuts']) is bool:
         raise Exception('config file key \'strict-donuts\' should be an bool to delete messages from donut users that block the bot')
-      if not 'gpt-enabled' in conf:
-        conf['gpt-enabled'] = false
-      elif not type(conf['gpt-enabled']) is bool:
-        raise Exception('config file key \'gpt-enabled\' should be an bool for whether or not to enable gpt message generation')
       return conf
   else:
     with open(filename, 'w') as f:
       conf = {
-        'gpt-enabled': True,
-        'checkpoints': {},
-        'allowed-channels': [],
         'donut-ids': [],
         'strict-donuts': False
       }
