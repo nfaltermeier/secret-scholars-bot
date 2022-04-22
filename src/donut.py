@@ -18,8 +18,24 @@ async def on_message(message, conf, client):
   global chance
 
   if random.randint(0, 100) < chance:
-    await message.add_reaction(emoji[random.randrange(0, len(emoji))])
-    chance = random.uniform(0, conf.random_reaction_base_chance * 2)
+    choice = random.randrange(0, len(emoji) + 1)
+    if choice == len(emoji):
+      await message.add_reaction("🇱")
+      await message.add_reaction("🇮")
+      await message.add_reaction("🇬")
+      await message.add_reaction("🇲")
+      await message.add_reaction("🇦")
+      await message.add_reaction("🇩")
+      await message.add_reaction("🇴")
+      await message.add_reaction("🇳")
+      await message.add_reaction("🇺")
+      await message.add_reaction("🇹")
+      await message.add_reaction("🇸")
+      await message.add_reaction("🍩")
+      await message.add_reaction("👅")
+    else:
+      await message.add_reaction(emoji[choice])
+    chance = random.uniform(0, conf.random_reaction_base_chance)
   else:
     chance += conf.random_reaction_chance_increment
     if message.author.id in conf.donut_ids:
