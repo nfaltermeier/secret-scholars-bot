@@ -10,6 +10,7 @@ import config
 import asyncio
 import minecraft
 import excuse
+import autogen_buildtime
 
 logging.basicConfig(level=logging.INFO)
 
@@ -49,7 +50,12 @@ async def on_message(message):
     if await roll.on_message(message):
       return
 
-    if message.content.startswith('$hello'):
+    if message.content.startswith('$version'):
+      time = datetime.fromisoformat(autogen_buildtime.build_time)
+      await message.channel.send(f'Build time: {time.strftime("%b %d %Y %X %Z")}', delete_after=300)
+      await asyncio.sleep(300)
+      await message.delete()
+    elif message.content.startswith('$hello'):
       await message.channel.send('Hello!', delete_after=300)
       await asyncio.sleep(300)
       await message.delete()
