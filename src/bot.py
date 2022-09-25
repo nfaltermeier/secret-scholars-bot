@@ -10,6 +10,7 @@ import config
 import asyncio
 import minecraft
 import excuse
+import markov
 import autogen_buildtime
 
 logging.basicConfig(level=logging.INFO)
@@ -47,6 +48,7 @@ async def on_message(message):
     await donut.on_message(message, config, client)
     await soup.on_message(message, client, config)
     await excuse.on_message(message)
+    await markov.on_message(message)
     if await roll.on_message(message):
       return
 

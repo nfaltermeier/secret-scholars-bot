@@ -5,6 +5,7 @@ disabled_checkpoint
 secret-scholars-bot-config.json
 src/config.py
 secret-scholars-bot-arm32v6.tar.gz
+markov.txt
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,python
