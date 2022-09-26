@@ -61,6 +61,8 @@ def replace_faces(gray, frame, replacement, replacement_dims):
     replacement_scale_y = h / replacement_dims[0][3]
     scaled_replacement_x = x - math.ceil(replacement_dims[0][0] * replacement_scale_x)
     scaled_replacement_y = y - math.ceil(replacement_dims[0][1] * replacement_scale_y)
+    scaled_replacement_x = scaled_replacement_x if scaled_replacement_x > 0 else 0
+    scaled_replacement_y = scaled_replacement_y if scaled_replacement_y > 0 else 0
     scaled_full_w = math.ceil(replacement.shape[1] * replacement_scale_x)
     scaled_full_h = math.ceil(replacement.shape[0] * replacement_scale_y)
     resized = cv2.resize(replacement, (scaled_full_w, scaled_full_h), interpolation=cv2.INTER_CUBIC)
