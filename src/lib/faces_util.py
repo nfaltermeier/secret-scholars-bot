@@ -1,11 +1,14 @@
 import cv2
 import numpy as np
 import math
+import aiohttp
+import os
+import config as conf
 from PIL import Image
 
-face_cascade = cv2.CascadeClassifier('opencv/face_detector.xml')
-eye_cascade = cv2.CascadeClassifier('opencv/eye_detector.xml')
-smile_cascade = cv2.CascadeClassifier('opencv/smile_detector.xml')
+face_cascade = cv2.CascadeClassifier('lib/opencv/face_detector.xml')
+eye_cascade = cv2.CascadeClassifier('lib/opencv/eye_detector.xml')
+smile_cascade = cv2.CascadeClassifier('lib/opencv/smile_detector.xml')
 
 def load_image_rgba(path):
   og_image = Image.open(path)
@@ -72,20 +75,33 @@ def replace_faces(gray, frame, replacement, replacement_dims):
   
   return found, frame
 
-img = load_image_rgba('student_small.png')
-# img = load_image_rgba('group.png')
-student = np.array(img)
+def get_face_replace(replacing_image):
+  face_replace = load_image_rgba(conf.face_picture)
+  attachment_pic = load_image_rgba(replacing_image)
+  gray = cv2.cvtColor(attachment_pic, cv2.COLOR_RGBA2GRAY)
+  found,img = replace_faces(gray, attachment_pic, face_replace, conf.face_dims)
 
-face = load_image_rgba('face.png')
-face_dims = [
-  [43, 208, 430, 430],
-  [245, 125, 82, 82],
-  [98, 131, 87, 87]
-]
-gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
-found,img = replace_faces(gray, img, face, face_dims)
-cv2.imwrite("face_detected.png", img)
-print('Successfully saved')
+  if found:
+    cv2.imwrite('face_detected.png', img)
+    return True, 'face_detected.png'
+  
+  return False, None
+
+if __name__ == '__main__':
+  img = load_image_rgba('student_small.png')
+  # img = load_image_rgba('group.png')
+  student = np.array(img)
+
+  face = load_image_rgba('face.png')
+  face_dims = [
+    [43, 208, 430, 430],
+    [245, 125, 82, 82],
+    [98, 131, 87, 87]
+  ]
+  gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
+  found,img = replace_faces(gray, img, face, face_dims)
+  cv2.imwrite("face_detected.png", img)
+  print('Successfully saved')
 
 # A video with faces applied for testing purposes
 # video_capture = cv2.VideoCapture(0)
