@@ -3,4 +3,4 @@ numpy
 pillow
 pycord
 python-dotenv
-discord
+markovchain
