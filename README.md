@@ -35,5 +35,5 @@ docker run -d secret-scholars-bot
 ### ARM32v6
 Run
 ```sh
-docker run -d secret-scholars-bot secret-scholars-bot:arm32v6
+docker run -d secret-scholars-bot:arm32v6
 ```
