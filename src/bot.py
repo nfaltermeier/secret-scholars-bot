@@ -5,6 +5,7 @@ import logging
 from datetime import datetime, timezone
 import donut
 import soup
+import faces
 import roll
 import config
 import asyncio
@@ -47,6 +48,7 @@ async def on_message(message):
     await donut.on_message(message, config, client)
     await soup.on_message(message, client, config)
     await excuse.on_message(message)
+    await faces.on_message(message, client, config)
     if await roll.on_message(message):
       return
 

@@ -20,3 +20,12 @@ excuses = [
   ("grocery shopping", 2)
 ] # An array of string messages or tuples containing a string message and a weight. Non-tuples have a weight on 1.
 # Weights can be a decimal, 0 < w < infinity
+
+# Face configs
+face_picture = 'lib/face.png'
+
+face_dims = [
+    [43, 208, 430, 430],
+    [245, 125, 82, 82],
+    [98, 131, 87, 87]
+]
