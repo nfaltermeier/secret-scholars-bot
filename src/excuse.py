@@ -25,10 +25,10 @@ def roll():
 trigger = re.compile(r"(^|\s)\$excuse($|\s)", re.MULTILINE)
 async def on_message(message):
   pos = 0
-  m = trigger.search(message.content, pos)
+  m = trigger.search(message.clean_content, pos)
   if m is None:
     return
-  result = message.content
+  result = message.clean_content
   while m is not None:
     r = roll()
     # Include capture group 1 and 2 in the result to include possible spaces around $excuse

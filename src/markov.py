@@ -12,5 +12,5 @@ cmd = '$mk '
 
 async def on_message(message):
   if message.content.startswith(cmd):
-    prefix = message.content[len(cmd):]
+    prefix = message.clean_content[len(cmd):]
     await message.channel.send(reply(prefix))
