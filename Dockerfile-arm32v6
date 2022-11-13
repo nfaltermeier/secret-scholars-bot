@@ -13,4 +13,4 @@ COPY .env src/ secret-scholars-bot-config.json markov.txt ./
 
 RUN printf "build_time=%s" "'`date -Iseconds`'" > autogen_buildtime.py
 
-# CMD [ "python", "./bot.py" ]
+CMD [ "python", "./bot.py" ]
