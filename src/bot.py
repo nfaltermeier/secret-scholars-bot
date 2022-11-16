@@ -36,7 +36,7 @@ async def on_thread_join(thread):
   await thread.join()
 
 @client.event
-async def on_message(message):
+async def on_message(message: discord.Message):
   try:
     # Ignore the bot's own messages
     if message.author == client.user:
@@ -63,6 +63,8 @@ async def on_message(message):
       await message.channel.send('Hello!', delete_after=300)
       await asyncio.sleep(300)
       await message.delete()
+    elif message.content.lower().startswith('good bot'):
+      await message.channel.send('Thanks. Good human.')
   except BaseException as error:
     logging.exception(f'{datetime.now(timezone.utc)} main on_message failed')
     await message.channel.send("Something went wrong :(")

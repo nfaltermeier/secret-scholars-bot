@@ -1,6 +1,6 @@
 opencv-python
 numpy
 pillow
-pycord
+py-cord
 python-dotenv
 markovchain
