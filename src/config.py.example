@@ -29,3 +29,6 @@ face_dims = [
     [245, 125, 82, 82],
     [98, 131, 87, 87]
 ]
+
+# Max total pixels for a face image to have, set to -1 to disable
+face_max_pixels = 2_000_000

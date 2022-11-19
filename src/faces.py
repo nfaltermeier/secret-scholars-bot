@@ -26,12 +26,12 @@ async def on_message(message: discord.Message, client, conf):
               if attachment.size > MAX_SIZE:
                 raise TooBigException
               if attachment.proxy_url != '404':
-                await do_face(original_message, 'attachment_picture.png', lambda : attachment.save('attachment_picture.png', use_cached=True))
+                await do_face(original_message, 'attachment_picture.png', conf, lambda : attachment.save('attachment_picture.png', use_cached=True))
                 return
         if len(message.embeds) > 0:
           for embed in message.embeds:
             if embed.type == 'image':
-              await do_face(original_message, 'attachment_picture.png', lambda : download_file(embed.url, 'attachment_picture.png'))
+              await do_face(original_message, 'attachment_picture.png', conf, lambda : download_file(embed.url, 'attachment_picture.png'))
               return
         if message.reference != None:
           message = await message.channel.fetch_message(message.reference.message_id)
@@ -39,27 +39,29 @@ async def on_message(message: discord.Message, client, conf):
         else:
           return
   except TooBigException:
-    await message.channel.send('Your image is too big :(')
+    await message.reply('Your image is too big :(')
 
-async def do_face(message: discord.Message, name, do_download):
+async def do_face(message: discord.Message, name, conf, do_download):
   try:
     logging.info(f'{datetime.now(timezone.utc)} Starting face processing for user {message.author.display_name} {message.author.id}')
     await do_download()
     found, path = faces_util.get_face_replace(name)
     if found:
-      await message.channel.send(file=discord.File(path))
+      await message.reply(file=discord.File(path))
     else:
-      await message.channel.send('No face found :(')
+      await message.reply('No face found :(')
     if os.path.exists('face_detected.png'): 
       os.remove('face_detected.png')
     if os.path.exists(name): 
       os.remove(name)
   except discord.NotFound:
-    logging.exception(f'{datetime.now(timezone.utc)} Face on_message')
-    await message.channel.send('Attachment not found :(')
+    logging.exception(f'{datetime.now(timezone.utc)} Face Attachment not found')
+    await message.reply('Attachment not found :(')
   except discord.HTTPException:
-    logging.exception(f'{datetime.now(timezone.utc)} Face on_message')
-    await message.channel.send('Could not download attachment :(')
+    logging.exception(f'{datetime.now(timezone.utc)} Face HTTP error')
+    await message.reply('Could not download attachment :(')
+  except faces_util.TooManyPixelsException as tmp:
+    await message.reply(f'Image has too many pixels. Image: {tmp.pixels:,} Max: {conf.face_max_pixels:,} :(')
 
 async def download_file(url, out_filename):
   async with aiohttp.ClientSession() as session:

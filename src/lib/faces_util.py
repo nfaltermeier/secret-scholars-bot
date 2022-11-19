@@ -6,12 +6,20 @@ import os
 import config as conf
 from PIL import Image
 
+class TooManyPixelsException(Exception):
+  def __init__(self, pixels: int):
+    self.pixels = pixels
+
 face_cascade = cv2.CascadeClassifier('lib/opencv/face_detector.xml')
 eye_cascade = cv2.CascadeClassifier('lib/opencv/eye_detector.xml')
 smile_cascade = cv2.CascadeClassifier('lib/opencv/smile_detector.xml')
 
-def load_image_rgba(path):
+def load_image_rgba(path, max_pixels = -1):
   og_image = Image.open(path)
+  img_size = og_image.size
+  pixels = img_size[0] * img_size[1]
+  if max_pixels != -1 and pixels > max_pixels:
+    raise TooManyPixelsException(pixels)
   rgba_image = og_image.convert(mode='RGBA')
   img = np.array(rgba_image)
   # B and R channels are swapped and there didn't seem to be a better way to do this
@@ -79,7 +87,7 @@ def replace_faces(gray, frame, replacement, replacement_dims):
 
 def get_face_replace(replacing_image):
   face_replace = load_image_rgba(conf.face_picture)
-  attachment_pic = load_image_rgba(replacing_image)
+  attachment_pic = load_image_rgba(replacing_image, conf.face_max_pixels)
   gray = cv2.cvtColor(attachment_pic, cv2.COLOR_RGBA2GRAY)
   found,img = replace_faces(gray, attachment_pic, face_replace, conf.face_dims)
 
