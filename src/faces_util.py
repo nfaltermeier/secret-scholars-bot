@@ -1,10 +1,10 @@
 import cv2
 import numpy as np
 import math
-import aiohttp
-import os
 import config as conf
 from PIL import Image
+import argparse
+import sys
 
 class TooManyPixelsException(Exception):
   def __init__(self, pixels: int):
@@ -85,33 +85,36 @@ def replace_faces(gray, frame, replacement, replacement_dims):
   
   return found, frame
 
-def get_face_replace(replacing_image):
+def get_face_replace(infile, outfile, max_pixels=conf.face_max_pixels):
   face_replace = load_image_rgba(conf.face_picture)
-  attachment_pic = load_image_rgba(replacing_image, conf.face_max_pixels)
+  attachment_pic = load_image_rgba(infile, max_pixels)
   gray = cv2.cvtColor(attachment_pic, cv2.COLOR_RGBA2GRAY)
   found,img = replace_faces(gray, attachment_pic, face_replace, conf.face_dims)
 
   if found:
-    cv2.imwrite('face_detected.png', img)
-    return True, 'face_detected.png'
+    cv2.imwrite(outfile, img)
+    return True
   
-  return False, None
+  return False
 
 if __name__ == '__main__':
-  img = load_image_rgba('student_small.png')
-  # img = load_image_rgba('group.png')
-  student = np.array(img)
+  parser = argparse.ArgumentParser(description='Apply faces to faces')
+  parser.add_argument('--infile', default='student_small.png', help='The file to apply faces to')
+  parser.add_argument('--outfile', default='face_detected.png', help='The file to save the modified image to')
+  parser.add_argument('--maxpixels', type=int, default=-1, help='Max total pixels for the infile to have, set to -1 to disable (default: -1)')
+  args = parser.parse_args()
 
-  face = load_image_rgba('face.png')
-  face_dims = [
-    [43, 208, 430, 430],
-    [245, 125, 82, 82],
-    [98, 131, 87, 87]
-  ]
-  gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
-  found,img = replace_faces(gray, img, face, face_dims)
-  cv2.imwrite("face_detected.png", img)
-  print('Successfully saved')
+  # face = load_image_rgba('face.png')
+  # face_dims = [
+  #   [43, 208, 430, 430],
+  #   [245, 125, 82, 82],
+  #   [98, 131, 87, 87]
+  # ]
+  try:
+    print(get_face_replace(args.infile, args.outfile, args.maxpixels))
+  except TooManyPixelsException as err:
+    print(f'TooManyPixelsException:{err.pixels}', file=sys.stderr)
+    exit(1)
 
 # A video with faces applied for testing purposes
 # video_capture = cv2.VideoCapture(0)

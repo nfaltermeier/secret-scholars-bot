@@ -7,7 +7,7 @@ WORKDIR /code
 
 ENV PYTHONPATH=$PYTHONPATH:/usr/lib/python3.10/site-packages
 
-RUN pip3 --no-cache-dir install -U py-cord python-dotenv markovchain pillow
+RUN pip3 --no-cache-dir install -U py-cord python-dotenv markovchain pillow argparse
 
 COPY .env src/ secret-scholars-bot-config.json markov.txt ./
 

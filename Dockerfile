@@ -6,7 +6,7 @@ WORKDIR /code
 # opencv dependencies https://stackoverflow.com/a/63377623
 RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN pip3 --no-cache-dir install -U py-cord python-dotenv markovchain pillow opencv-python
+RUN pip3 --no-cache-dir install -U py-cord python-dotenv markovchain pillow opencv-python argparse
 
 COPY .env src/ secret-scholars-bot-config.json markov.txt ./
 

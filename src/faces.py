@@ -1,10 +1,10 @@
-import lib.faces_util as faces_util
+import faces_util
 import os
 import discord
 import logging
 from datetime import datetime, timezone
 import aiohttp
-from asyncio import run
+import asyncio
 
 BYTES_IN_MEGABYTE = 1048576
 MAX_SIZE = BYTES_IN_MEGABYTE * 8
@@ -12,6 +12,8 @@ class TooBigException(Exception):
   pass
 
 allowable_attachment_types = ['image/png', 'image/jpeg']
+
+lock = asyncio.Lock()
 
 async def on_message(message: discord.Message, client, conf):
   try:
@@ -42,26 +44,45 @@ async def on_message(message: discord.Message, client, conf):
     await message.reply('Your image is too big :(')
 
 async def do_face(message: discord.Message, name, conf, do_download):
-  try:
-    logging.info(f'{datetime.now(timezone.utc)} Starting face processing for user {message.author.display_name} {message.author.id}')
-    await do_download()
-    found, path = faces_util.get_face_replace(name)
-    if found:
-      await message.reply(file=discord.File(path))
-    else:
-      await message.reply('No face found :(')
-    if os.path.exists('face_detected.png'): 
-      os.remove('face_detected.png')
-    if os.path.exists(name): 
-      os.remove(name)
-  except discord.NotFound:
-    logging.exception(f'{datetime.now(timezone.utc)} Face Attachment not found')
-    await message.reply('Attachment not found :(')
-  except discord.HTTPException:
-    logging.exception(f'{datetime.now(timezone.utc)} Face HTTP error')
-    await message.reply('Could not download attachment :(')
-  except faces_util.TooManyPixelsException as tmp:
-    await message.reply(f'Image has too many pixels. Image: {tmp.pixels:,} Max: {conf.face_max_pixels:,} :(')
+  logging.info('before lock')
+  async with lock:
+    logging.info('in lock')
+    infile = name
+    outfile = 'face_detected.png'
+    try:
+      logging.info(f'{datetime.now(timezone.utc)} Starting face processing for user {message.author.display_name} {message.author.id}')
+      await do_download()
+
+      proc = await asyncio.create_subprocess_shell(
+        f'python3 faces_util.py --infile={infile} --outfile={outfile} --maxpixels={conf.face_max_pixels}',
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE)
+
+      stdout, stderr = await proc.communicate()
+      if proc.returncode == 0:
+        if stdout.decode().rstrip() == 'True':
+          await message.reply(file=discord.File(outfile))
+        else:
+          await message.reply('No face found :(')
+      else:
+        errormessage = stderr.decode().rstrip()
+        if errormessage.startswith('TooManyPixelsException'):
+          pixels = int(errormessage.split(':')[1])
+          await message.reply(f'Image has too many pixels. Image: {pixels:,} Max: {conf.face_max_pixels:,} :(')
+        else:
+          await message.reply('Something went wrong :(')
+          logging.exception(f'{datetime.now(timezone.utc)} Face subprocess error {errormessage}')
+    except discord.NotFound:
+      logging.exception(f'{datetime.now(timezone.utc)} Face Attachment not found')
+      await message.reply('Attachment not found :(')
+    except discord.HTTPException:
+      logging.exception(f'{datetime.now(timezone.utc)} Face HTTP error')
+      await message.reply('Could not download attachment :(')
+    finally:
+      if os.path.exists(outfile):
+        os.remove(outfile)
+      if os.path.exists(infile):
+        os.remove(infile)
 
 async def download_file(url, out_filename):
   async with aiohttp.ClientSession() as session:
