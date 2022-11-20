@@ -44,9 +44,7 @@ async def on_message(message: discord.Message, client, conf):
     await message.reply('Your image is too big :(')
 
 async def do_face(message: discord.Message, name, conf, do_download):
-  logging.info('before lock')
   async with lock:
-    logging.info('in lock')
     infile = name
     outfile = 'face_detected.png'
     try:
