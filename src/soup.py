@@ -9,9 +9,12 @@ session = aiohttp.ClientSession()
 async def on_message(message, client, conf):
   if message.content.startswith("$soup"):
     if not message.channel.name in conf.soup_channels:
-      await message.channel.send('Please use the right channel :slight_smile:', delete_after=300)
-      await asyncio.sleep(300)
-      await message.delete()
+      try:
+        await message.channel.send('Please use the right channel :slight_smile:', delete_after=300)
+        await asyncio.sleep(300)
+        await message.delete()
+      except discord.NotFound:
+        pass
       return
     args = message.content.split()
     cat = 'top'

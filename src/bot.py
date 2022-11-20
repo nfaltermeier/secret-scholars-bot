@@ -55,14 +55,20 @@ async def on_message(message: discord.Message):
       return
 
     if message.content.startswith('$version'):
-      time = datetime.fromisoformat(autogen_buildtime.build_time)
-      await message.channel.send(f'Build time: {time.strftime("%b %d %Y %X %Z")}', delete_after=300)
-      await asyncio.sleep(300)
-      await message.delete()
+      try:
+        time = datetime.fromisoformat(autogen_buildtime.build_time)
+        await message.channel.send(f'Build time: {time.strftime("%b %d %Y %X %Z")}', delete_after=300)
+        await asyncio.sleep(300)
+        await message.delete()
+      except discord.NotFound:
+        pass
     elif message.content.startswith('$hello'):
-      await message.channel.send('Hello!', delete_after=300)
-      await asyncio.sleep(300)
-      await message.delete()
+      try:
+        await message.channel.send('Hello!', delete_after=300)
+        await asyncio.sleep(300)
+        await message.delete()
+      except discord.NotFound:
+        pass
     elif message.content.lower().startswith('good bot'):
       await message.channel.send('Thanks. Good human.')
   except BaseException as error:
