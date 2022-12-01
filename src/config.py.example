@@ -32,3 +32,5 @@ face_dims = [
 
 # Max total pixels for a face image to have, set to -1 to disable
 face_max_pixels = 2_000_000
+
+enforce_vxtwitter = True
