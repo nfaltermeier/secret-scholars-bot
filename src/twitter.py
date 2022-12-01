@@ -12,5 +12,9 @@ async def on_message(message: discord.Message, conf):
       if space == -1:
         space = len(message.content)
       url = f'https://vxtwitter.com{message.content[i + base_len: space]}'
-      await message.edit(suppress=True)
-      await message.reply(url)
+      if i == 0 and space == len(message.content):
+        await message.channel.send(f'{message.author.mention} (🤡) sent: {url}')
+        await message.delete()
+      else:
+        await message.edit(suppress=True)
+        await message.reply(url)
