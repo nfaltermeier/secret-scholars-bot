@@ -26,11 +26,22 @@ async def ping_minecraft():
     for channel in channels:
       await channel.send(message, delete_after=600)
   except socket.timeout as timeout:
-    message = "Connection timed out (server offline)"
-    for channel in channels:
-      await channel.send(message, delete_after=600)
+    await print_timeout()
+  except OSError as oserror:
+    if oserror.errno == 113:
+      await print_timeout()
+    else:
+      await print_error()
   except BaseException as error:
-    message = "An error occurred while pinging the server"
-    logging.exception(f'{datetime.now(timezone.utc)} minecraft ping failed')
-    for channel in channels:
-      await channel.send(message, delete_after=600)
+    await print_error()
+
+async def print_timeout():
+  message = "Connection timed out (server offline)"
+  for channel in channels:
+    await channel.send(message, delete_after=600)
+
+async def print_error():
+  message = "An error occurred while pinging the server"
+  logging.exception(f'{datetime.now(timezone.utc)} minecraft ping failed')
+  for channel in channels:
+    await channel.send(message, delete_after=600)
