@@ -33,4 +33,11 @@ face_dims = [
 # Max total pixels for a face image to have, set to -1 to disable
 face_max_pixels = 2_000_000
 
-enforce_vxtwitter = True
+enforce_embeds = True
+embeds = {
+  "twitter.com": "vxtwitter.com",
+  "tiktok.com": "vxtiktok.com",
+  "www.tiktok.com": "www.vxtiktok.com",
+  "instagram.com": "ddinstagram.com",
+  "www.instagram.com": "www.ddinstagram.com",
+}

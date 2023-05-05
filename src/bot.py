@@ -12,7 +12,7 @@ import asyncio
 import minecraft
 import excuse
 import markov
-import twitter
+import embeds
 import autogen_buildtime
 
 logging.basicConfig(level=logging.INFO)
@@ -52,7 +52,7 @@ async def on_message(message: discord.Message):
     await excuse.on_message(message)
     await markov.on_message(message)
     await faces.on_message(message, client, config)
-    await twitter.on_message(message, config)
+    await embeds.on_message(message, config)
     if await roll.on_message(message):
       return
 
