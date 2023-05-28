@@ -16,7 +16,7 @@ async def on_message(message: discord.Message, conf):
           space = len(message.content)
         url = f'https://{replacement}{message.content[i + test_len: space]}'
         if i == 0 and space == len(message.content):
-          await message.channel.send(f'{message.author.mention} (🤡) sent: {url}')
+          await message.channel.send(f'{message.author.mention} sent: {url}')
           await message.delete()
         else:
           await message.edit(suppress=True)
